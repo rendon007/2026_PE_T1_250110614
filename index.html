@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probabilidad y Estadística</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        p.intro {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .cualitativo { border-left: 10px solid #3498db; }
+        .discreto    { border-left: 10px solid #2ecc71; }
+        .continuo    { border-left: 10px solid #e74c3c; }
+
+        h2 { margin-top: 0; color: #444; }
+        
+        .def { 
+            background-color: #fcfcfc;
+            border-left: 4px solid #ddd;
+            padding: 10px 15px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .caja-datos {
+            background-color: #f1f2f6;
+            border: 1px solid #ddd;
+            height: 100px; 
+            overflow-y: scroll;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+        }
+        th { background-color: #f8f9fa; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <h1>Probabilidad y Estadística</h1>
+    <p class="intro">Clasificación de datos:</p>
+
+    <div class="card discreto">
+        <h2>1. Datos Cuantitativos Discretos</h2>
+        <div class="def">
+            <p><strong>Definición:</strong> Son datos numéricos que resultan de un <u>conteo</u>. Solo pueden tomar valores enteros exactos y finitos.</p>
+            <p>Al lanzar un dado, solo puede salir 1, 2, 3, 4, 5 o 6. No puede salir "3.5".</p>
+            <p><strong>Ejemplo seleccionado:</strong> Lanzamiento de un dado (100 veces).</p>
+        </div>
+        
+        <div id="output-discreto" class="caja-datos">Generando datos...</div>
+        
+        <h3>Tabla de Frecuencias</h3>
+        <table>
+            <thead><tr><th>Cara del Dado</th><th>Frecuencia (Veces que salió)</th></tr></thead>
+            <tbody id="tabla-discreto"></tbody>
+        </table>
+    </div>
+
+    <div class="card continuo">
+        <h2>2. Datos Cuantitativos Continuos</h2>
+        <div class="def">
+            <p><strong>Definición:</strong> Son datos numéricos que resultan de una <u>medición</u>. Pueden tener decimales infinitos dentro de un rango.</p>
+            <p>La altura no es exacta; alguien puede medir 1.70m, 1.705m o 1.7058m dependiendo de la precisión.</p>
+            <p><strong>Ejemplo seleccionado:</strong> Estatura de estudiantes (1.50m - 1.95m).</p>
+        </div>
+        
+        <div id="output-continuo" class="caja-datos">Generando datos...</div>
+        
+        <h3>Tabla de Frecuencias (Por Rangos de Estatura)</h3>
+        <table>
+            <thead><tr><th>Rango de Estatura</th><th>Frecuencia (Cantidad)</th></tr></thead>
+            <tbody id="tabla-continuo"></tbody>
+        </table>
+    </div>
+
+    <div class="card cualitativo">
+        <h2>3. Datos Cualitativos (Categóricos)</h2>
+        <div class="def">
+            <p><strong>Definición:</strong> Se refieren a cualidades o marcas que <u>no son números</u> matemáticos.</p>
+            <p>Sirven para agrupar elementos por características comunes.</p>
+            <p><strong>Ejemplo seleccionado:</strong> Marca de Teléfono Móvil.</p>
+        </div>
+        
+        <div id="output-cualitativo" class="caja-datos">Generando datos...</div>
+        
+        <h3>Tabla de Frecuencias</h3>
+        <table>
+            <thead><tr><th>Marca</th><th>Frecuencia (Usuarios)</th></tr></thead>
+            <tbody id="tabla-cualitativo"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generarDiscretos() {
+            let datos = [];
+            let conteo = {};
+
+            for(let i=0; i<100; i++) {
+                let caraDado = randomInt(1, 6);
+                datos.push(caraDado);
+                conteo[caraDado] = (conteo[caraDado] || 0) + 1;
+            }
+            document.getElementById("output-discreto").innerText = datos.join(", ");
+            let clavesOrdenadas = Object.keys(conteo).sort();
+            let tablaHTML = "";
+            clavesOrdenadas.forEach(num => {
+                tablaHTML += `<tr><td>Cara ${num}</td><td>${conteo[num]}</td></tr>`;
+            });
+            document.getElementById("tabla-discreto").innerHTML = tablaHTML;
+        }
+
+        function generarContinuos() {
+            let datos = [];
+            let intervalos = {
+                "1.50m - 1.60m": 0, "1.60m - 1.70m": 0, "1.70m - 1.80m": 0, "1.80m - 1.90m": 0, "Más de 1.90m": 0
+            };
+
+            for(let i=0; i<100; i++) {
+                let altura = (Math.random() * (1.95 - 1.50) + 1.50);
+                datos.push(altura.toFixed(2) + "m"); 
+
+                if (altura < 1.60) intervalos["1.50m - 1.60m"]++;
+                else if (altura < 1.70) intervalos["1.60m - 1.70m"]++;
+                else if (altura < 1.80) intervalos["1.70m - 1.80m"]++;
+                else if (altura < 1.90) intervalos["1.80m - 1.90m"]++;
+                else intervalos["Más de 1.90m"]++;
+            }
+            document.getElementById("output-continuo").innerText = datos.join(" | ");
+            let tablaHTML = "";
+            for (let rango in intervalos) {
+                tablaHTML += `<tr><td>${rango}</td><td>${intervalos[rango]}</td></tr>`;
+            }
+            document.getElementById("tabla-continuo").innerHTML = tablaHTML;
+        }
+
+        function generarCualitativos() {
+            const opciones = ["Samsung", "Apple", "Xiaomi", "Motorola"];
+            let datos = [];
+            let conteo = { "Samsung": 0, "Apple": 0, "Xiaomi": 0, "Motorola": 0 };
+
+            for(let i=0; i<100; i++) {
+                let elegido = opciones[randomInt(0, 3)];
+                datos.push(elegido);
+                conteo[elegido]++;
+            }
+            document.getElementById("output-cualitativo").innerText = datos.join(", ");
+            let tablaHTML = "";
+            for (let categoria in conteo) {
+                tablaHTML += `<tr><td>${categoria}</td><td>${conteo[categoria]}</td></tr>`;
+            }
+            document.getElementById("tabla-cualitativo").innerHTML = tablaHTML;
+        }
+
+        window.onload = function() {
+            generarDiscretos();
+            generarContinuos();
+            generarCualitativos();
+        };
+    </script>
+</body>
+</html>
