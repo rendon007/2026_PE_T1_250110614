@@ -3,357 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadística Avanzada: Visualización Múltiple</title>
+    <title>Estadística Completa: 100 Datos y 5 Gráficas</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-body: #f4f6f8;
-            --text-color: #2d3436;
-            --card-bg: #ffffff;
-            --color-discreto: #FF6B6B;
-            --color-continuo: #4ECDC4;
-            --color-cualitativo: #A18CD1;
+            --bg: #f4f7f6;
+            --text: #333;
+            --white: #fff;
+            --c-discreto: #ff6b6b;
+            --c-continuo: #1dd1a1;
+            --c-cualitativo: #5f27cd;
         }
-
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 20px;
         }
-
-        .main-container {
-            max-width: 1200px;
+        .container {
+            max-width: 1400px;
             margin: 0 auto;
         }
-
         h1 {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: -webkit-linear-gradient(#333, #666);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            font-size: 2rem;
         }
-
-        .intro-text {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-            font-size: 1.1rem;
-            color: #636e72;
-            line-height: 1.6;
-        }
-
-        .section-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        .section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
             margin-bottom: 50px;
-            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 5px solid #ccc;
         }
+        .s-discreto { border-top-color: var(--c-discreto); }
+        .s-continuo { border-top-color: var(--c-continuo); }
+        .s-cualitativo { border-top-color: var(--c-cualitativo); }
 
-        .card-header {
-            padding: 25px 30px;
-            color: white;
+        .header-box {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
-
-        .header-discreto { background: linear-gradient(135deg, #FF6B6B, #EE5253); }
-        .header-continuo { background: linear-gradient(135deg, #4ECDC4, #556270); }
-        .header-cualitativo { background: linear-gradient(135deg, #A18CD1, #FBC2EB); }
-
-        .card-header h2 { margin: 0; font-size: 1.8rem; }
-
-        .info-panel {
-            padding: 20px 30px;
-            background-color: #fcfcfc;
-            border-bottom: 1px solid #eee;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .info-box h3 { margin-top: 0; color: #444; }
-        .info-box p { font-size: 0.95rem; line-height: 1.5; color: #555; }
-        .highlight { font-weight: bold; color: #333; }
-
-        .controls {
-            padding: 20px;
-            text-align: center;
-            background: #f8f9fa;
-            border-bottom: 1px solid #eee;
-        }
-
         button {
-            padding: 12px 30px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 5px;
             color: white;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 1rem;
         }
+        .btn-d { background: var(--c-discreto); }
+        .btn-c { background: var(--c-continuo); }
+        .btn-q { background: var(--c-cualitativo); }
 
-        button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        
-        .btn-discreto { background: #FF6B6B; }
-        .btn-continuo { background: #4ECDC4; }
-        .btn-cualitativo { background: #A18CD1; }
-
-        .grid-charts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 30px;
-        }
-
-        .chart-wrapper {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 10px;
+        .data-box {
+            background: #2d3436;
+            color: #dfe6e9;
             padding: 15px;
+            border-radius: 5px;
+            height: 100px;
+            overflow-y: scroll;
+            font-family: monospace;
+            margin-bottom: 30px;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+        }
+        .label-data {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .chart-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
             height: 300px;
             position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-
         .chart-title {
             text-align: center;
             font-size: 0.9rem;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #888;
-            text-transform: uppercase;
-        }
-
-        .data-preview {
-            font-family: monospace;
-            font-size: 0.8rem;
             color: #666;
-            background: #eee;
-            padding: 10px;
-            margin: 0 30px;
-            border-radius: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        @media (max-width: 768px) {
-            .info-panel { grid-template-columns: 1fr; }
-            .card-header { flex-direction: column; gap: 10px; text-align: center; }
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <h1>Análisis Estadístico Multidimensional</h1>
-    <p class="intro-text">
-        Esta herramienta genera simulaciones en tiempo real para visualizar cómo se comportan los diferentes tipos de datos estadísticos. 
-        Se presentan 5 perspectivas gráficas diferentes para cada conjunto de datos.
-    </p>
+<div class="container">
+    <h1>Reporte Estadístico Dinámico</h1>
 
-    <div class="section-card">
-        <div class="card-header header-discreto">
+    <div class="section s-discreto">
+        <div class="header-box">
             <h2>1. Datos Discretos (Dados)</h2>
-            <button class="btn-discreto" onclick="generarDiscretos()">Generar Nuevos Datos</button>
+            <button class="btn-d" onclick="runDiscreto()">Generar 100 Datos</button>
         </div>
-        <div class="info-panel">
-            <div class="info-box">
-                <h3>🔍 Concepto Clave</h3>
-                <p>Los datos discretos provienen de un proceso de <span class="highlight">conteo</span>. Solo pueden tomar valores enteros aislados. Entre el valor 1 y el 2 no hay nada (no puedes sacar 1.5 en un dado estándar).</p>
-            </div>
-            <div class="info-box">
-                <h3>📊 Interpretación</h3>
-                <p>Al lanzar un dado 100 veces, esperamos una "Distribución Uniforme" teórica (todas las caras con igual probabilidad). Sin embargo, el azar crea variaciones naturales que veremos en las gráficas.</p>
-            </div>
-        </div>
-        <div class="controls">
-            <div id="text-discreto" class="data-preview">Datos: Esperando generación...</div>
-        </div>
-        <div class="grid-charts">
-            <div class="chart-wrapper"><div class="chart-title">Frecuencia Absoluta (Barras)</div><canvas id="d_bar"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Proporción (Pastel)</div><canvas id="d_pie"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Tendencia (Línea)</div><canvas id="d_line"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Simetría (Radar)</div><canvas id="d_radar"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Volumen (Polar Area)</div><canvas id="d_polar"></canvas></div>
+        <span class="label-data">Visualización de los 100 datos generados:</span>
+        <div id="data-discreto" class="data-box">Esperando generación...</div>
+        
+        <div class="charts-grid">
+            <div class="chart-card"><div class="chart-title">Histograma</div><canvas id="d_hist"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Diagrama de Barras</div><canvas id="d_bar"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Polígono de Frecuencias</div><canvas id="d_poly"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Ojiva (Acumulada)</div><canvas id="d_ogive"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Gráfica de Pastel</div><canvas id="d_pie"></canvas></div>
         </div>
     </div>
 
-    <div class="section-card">
-        <div class="card-header header-continuo">
+    <div class="section s-continuo">
+        <div class="header-box">
             <h2>2. Datos Continuos (Estaturas)</h2>
-            <button class="btn-continuo" onclick="generarContinuos()">Generar Nuevos Datos</button>
+            <button class="btn-c" onclick="runContinuo()">Generar 100 Datos</button>
         </div>
-        <div class="info-panel">
-            <div class="info-box">
-                <h3>🔍 Concepto Clave</h3>
-                <p>Los datos continuos provienen de una <span class="highlight">medición</span>. Pueden tomar infinitos valores dentro de un rango (ej. 1.754m). Para graficarlos, es obligatorio agruparlos en intervalos o "bins".</p>
-            </div>
-            <div class="info-box">
-                <h3>📊 Interpretación</h3>
-                <p>Las estaturas suelen seguir una "Distribución Normal" (Campana de Gauss), donde la mayoría de la gente está en el promedio y hay pocos muy bajos o muy altos. Observa la forma de campana en el Polígono.</p>
-            </div>
-        </div>
-        <div class="controls">
-            <div id="text-continuo" class="data-preview">Datos: Esperando generación...</div>
-        </div>
-        <div class="grid-charts">
-            <div class="chart-wrapper"><div class="chart-title">Histograma (Barras)</div><canvas id="c_bar"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Polígono de Frecuencias (Línea)</div><canvas id="c_line"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Distribución Porcentual (Dona)</div><canvas id="c_doughnut"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Dispersión de Rangos (Radar)</div><canvas id="c_radar"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Ranking Horizontal (Barras H)</div><canvas id="c_hbar"></canvas></div>
+        <span class="label-data">Visualización de los 100 datos generados:</span>
+        <div id="data-continuo" class="data-box">Esperando generación...</div>
+
+        <div class="charts-grid">
+            <div class="chart-card"><div class="chart-title">Histograma (Intervalos)</div><canvas id="c_hist"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Diagrama de Barras</div><canvas id="c_bar"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Polígono de Frecuencias</div><canvas id="c_poly"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Ojiva (Acumulada)</div><canvas id="c_ogive"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Gráfica de Pastel</div><canvas id="c_pie"></canvas></div>
         </div>
     </div>
 
-    <div class="section-card">
-        <div class="card-header header-cualitativo">
+    <div class="section s-cualitativo">
+        <div class="header-box">
             <h2>3. Datos Cualitativos (Marcas)</h2>
-            <button class="btn-cualitativo" onclick="generarCualitativos()">Generar Nuevos Datos</button>
+            <button class="btn-q" onclick="runCualitativo()">Generar 100 Datos</button>
         </div>
-        <div class="info-panel">
-            <div class="info-box">
-                <h3>🔍 Concepto Clave</h3>
-                <p>Son variables <span class="highlight">categóricas</span> que describen cualidades no numéricas. En este caso son datos "nominales" porque no tienen un orden jerárquico lógico (Apple no es "mayor" que Samsung matemáticamente).</p>
-            </div>
-            <div class="info-box">
-                <h3>📊 Interpretación</h3>
-                <p>Se utilizan para estudios de mercado y preferencias. La gráfica de Pastel y la de Dona son las más comunes para mostrar la "Cuota de Mercado" (Market Share) de cada categoría.</p>
-            </div>
-        </div>
-        <div class="controls">
-            <div id="text-cualitativo" class="data-preview">Datos: Esperando generación...</div>
-        </div>
-        <div class="grid-charts">
-            <div class="chart-wrapper"><div class="chart-title">Cuota de Mercado (Pastel)</div><canvas id="q_pie"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Comparativa (Barras)</div><canvas id="q_bar"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Anillo (Dona)</div><canvas id="q_doughnut"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Impacto Visual (Polar Area)</div><canvas id="q_polar"></canvas></div>
-            <div class="chart-wrapper"><div class="chart-title">Perfil (Radar)</div><canvas id="q_radar"></canvas></div>
+        <span class="label-data">Visualización de los 100 datos generados:</span>
+        <div id="data-cualitativo" class="data-box">Esperando generación...</div>
+
+        <div class="charts-grid">
+            <div class="chart-card"><div class="chart-title">Histograma (Simulado)</div><canvas id="q_hist"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Diagrama de Barras</div><canvas id="q_bar"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Polígono de Frecuencias</div><canvas id="q_poly"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Ojiva (Pareto Acumulado)</div><canvas id="q_ogive"></canvas></div>
+            <div class="chart-card"><div class="chart-title">Gráfica de Pastel</div><canvas id="q_pie"></canvas></div>
         </div>
     </div>
 </div>
 
 <script>
-    const charts = {};
+    let chartStore = {};
 
-    function crearGrafica(canvasId, tipo, labels, data, colores, labelDataset) {
-        const ctx = document.getElementById(canvasId).getContext('2d');
-        if (charts[canvasId]) charts[canvasId].destroy();
+    function destroyChart(id) {
+        if (chartStore[id]) {
+            chartStore[id].destroy();
+        }
+    }
 
-        const config = {
-            type: tipo,
+    function createChart(id, type, labels, data, color, options = {}) {
+        destroyChart(id);
+        const ctx = document.getElementById(id).getContext('2d');
+        
+        let datasetConfig = {
+            label: 'Frecuencia',
+            data: data,
+            backgroundColor: type === 'pie' ? getColors(data.length) : color + '80',
+            borderColor: type === 'pie' ? '#fff' : color,
+            borderWidth: 1,
+            fill: (type === 'line' && options.fill),
+            tension: 0.3
+        };
+
+        if (options.isOgive) {
+            datasetConfig.stepped = false;
+            datasetConfig.fill = false;
+        }
+
+        let finalOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: type === 'pie' } },
+            scales: (type === 'pie') ? {} : { y: { beginAtZero: true } }
+        };
+
+        if (options.isHistogram) {
+            finalOptions.scales.x = { grid: { offset: false } };
+            datasetConfig.barPercentage = 1.0;
+            datasetConfig.categoryPercentage = 1.0;
+        }
+
+        chartStore[id] = new Chart(ctx, {
+            type: type,
             data: {
                 labels: labels,
-                datasets: [{
-                    label: labelDataset,
-                    data: data,
-                    backgroundColor: colores.bg,
-                    borderColor: colores.border,
-                    borderWidth: 1,
-                    fill: tipo === 'line' || tipo === 'radar'
-                }]
+                datasets: [datasetConfig]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: tipo !== 'bar' && tipo !== 'horizontalBar' } },
-                scales: (tipo === 'bar' || tipo === 'line') ? { y: { beginAtZero: true } } : {}
-            }
-        };
-
-        if(tipo === 'horizontalBar') config.type = 'bar';
-        if(tipo === 'horizontalBar') config.options.indexAxis = 'y';
-
-        charts[canvasId] = new Chart(ctx, config);
+            options: finalOptions
+        });
     }
 
-    function generarDiscretos() {
-        let conteo = [0, 0, 0, 0, 0, 0];
-        let raw = [];
-        for(let i=0; i<100; i++){
+    function getColors(count) {
+        let colors = ['#e74c3c', '#3498db', '#9b59b6', '#2ecc71', '#f1c40f', '#e67e22', '#1abc9c', '#34495e'];
+        return Array(count).fill().map((_, i) => colors[i % colors.length]);
+    }
+
+    function calculateCumulative(dataArray) {
+        let cumulative = [];
+        dataArray.reduce((a, b, i) => cumulative[i] = a + b, 0);
+        return cumulative;
+    }
+
+    function runDiscreto() {
+        let rawData = [];
+        let counts = [0, 0, 0, 0, 0, 0];
+        for(let i=0; i<100; i++) {
             let val = Math.floor(Math.random() * 6) + 1;
-            raw.push(val);
-            conteo[val-1]++;
+            rawData.push(val);
+            counts[val-1]++;
         }
-        document.getElementById('text-discreto').innerText = "Muestra (últimos 20): " + raw.slice(-20).join(", ") + "...";
+        document.getElementById('data-discreto').innerText = rawData.join(", ");
+        
+        let labels = ['1', '2', '3', '4', '5', '6'];
+        let cumulative = calculateCumulative(counts);
+        let color = '#ff6b6b';
 
-        const labels = ['Cara 1', 'Cara 2', 'Cara 3', 'Cara 4', 'Cara 5', 'Cara 6'];
-        const colors = {
-            bg: ['#FF6B6B80', '#FF8E5380', '#FFA50280', '#2ED57380', '#1E90FF80', '#3742FA80'],
-            border: ['#FF6B6B', '#FF8E53', '#FFA502', '#2ED573', '#1E90FF', '#3742FA']
-        };
-
-        crearGrafica('d_bar', 'bar', labels, conteo, colors, 'Frecuencia');
-        crearGrafica('d_pie', 'pie', labels, conteo, colors, 'Proporción');
-        crearGrafica('d_line', 'line', labels, conteo, {bg: '#FF6B6B20', border: '#FF6B6B'}, 'Tendencia');
-        crearGrafica('d_radar', 'radar', labels, conteo, {bg: '#FF8E5340', border: '#FF8E53'}, 'Simetría');
-        crearGrafica('d_polar', 'polarArea', labels, conteo, colors, 'Volumen');
+        createChart('d_hist', 'bar', labels, counts, color, { isHistogram: true });
+        createChart('d_bar', 'bar', labels, counts, color);
+        createChart('d_poly', 'line', labels, counts, color, { fill: true });
+        createChart('d_ogive', 'line', labels, cumulative, color, { isOgive: true });
+        createChart('d_pie', 'pie', labels, counts, color);
     }
 
-    function generarContinuos() {
-        let conteo = [0, 0, 0, 0, 0];
-        let raw = [];
-        for(let i=0; i<100; i++){
-            let h = (Math.random() * (1.95 - 1.50) + 1.50);
-            raw.push(h.toFixed(2));
-            if(h < 1.60) conteo[0]++;
-            else if(h < 1.70) conteo[1]++;
-            else if(h < 1.80) conteo[2]++;
-            else if(h < 1.90) conteo[3]++;
-            else conteo[4]++;
+    function runContinuo() {
+        let rawData = [];
+        let bins = [0, 0, 0, 0, 0]; 
+        let labels = ['1.50-1.60', '1.60-1.70', '1.70-1.80', '1.80-1.90', '1.90-2.00'];
+        
+        for(let i=0; i<100; i++) {
+            let h = parseFloat((Math.random() * 0.5 + 1.50).toFixed(2));
+            rawData.push(h);
+            if (h < 1.60) bins[0]++;
+            else if (h < 1.70) bins[1]++;
+            else if (h < 1.80) bins[2]++;
+            else if (h < 1.90) bins[3]++;
+            else bins[4]++;
         }
-        document.getElementById('text-continuo').innerText = "Muestra (últimos 20): " + raw.slice(-20).join("m, ") + "m...";
+        document.getElementById('data-continuo').innerText = rawData.join(" | ");
 
-        const labels = ['<1.60', '1.60-1.70', '1.70-1.80', '1.80-1.90', '>1.90'];
-        const colors = {
-            bg: ['#4ECDC480', '#C7F46480', '#FF6B6B80', '#C4456980', '#55627080'],
-            border: ['#4ECDC4', '#C7F464', '#FF6B6B', '#C44569', '#556270']
-        };
+        let cumulative = calculateCumulative(bins);
+        let color = '#1dd1a1';
 
-        crearGrafica('c_bar', 'bar', labels, conteo, {bg: '#4ECDC480', border: '#4ECDC4'}, 'Estudiantes');
-        crearGrafica('c_line', 'line', labels, conteo, {bg: '#55627020', border: '#556270'}, 'Polígono');
-        crearGrafica('c_doughnut', 'doughnut', labels, conteo, colors, 'Distribución');
-        crearGrafica('c_radar', 'radar', labels, conteo, {bg: '#C7F46440', border: '#C7F464'}, 'Dispersión');
-        crearGrafica('c_hbar', 'horizontalBar', labels, conteo, {bg: '#FF6B6B80', border: '#FF6B6B'}, 'Ranking');
+        createChart('c_hist', 'bar', labels, bins, color, { isHistogram: true });
+        createChart('c_bar', 'bar', labels, bins, color);
+        createChart('c_poly', 'line', labels, bins, color, { fill: true });
+        createChart('c_ogive', 'line', labels, cumulative, color, { isOgive: true });
+        createChart('c_pie', 'pie', labels, bins, color);
     }
 
-    function generarCualitativos() {
-        const brands = ["Samsung", "Apple", "Xiaomi", "Motorola"];
-        let conteo = [0, 0, 0, 0];
-        let raw = [];
-        for(let i=0; i<100; i++){
-            let idx = Math.floor(Math.random() * 4);
-            raw.push(brands[idx]);
-            conteo[idx]++;
+    function runCualitativo() {
+        let brands = ['Samsung', 'Apple', 'Xiaomi', 'Motorola', 'Huawei'];
+        let rawData = [];
+        let counts = [0, 0, 0, 0, 0];
+        
+        for(let i=0; i<100; i++) {
+            let idx = Math.floor(Math.random() * 5);
+            rawData.push(brands[idx]);
+            counts[idx]++;
         }
-        document.getElementById('text-cualitativo').innerText = "Muestra (últimos 20): " + raw.slice(-20).join(", ") + "...";
+        document.getElementById('data-cualitativo').innerText = rawData.join(", ");
 
-        const colors = {
-            bg: ['#3498db80', '#95a5a680', '#e67e2280', '#2ecc7180'],
-            border: ['#3498db', '#95a5a6', '#e67e22', '#2ecc71']
-        };
+        let cumulative = calculateCumulative(counts);
+        let color = '#5f27cd';
 
-        crearGrafica('q_pie', 'pie', brands, conteo, colors, 'Market Share');
-        crearGrafica('q_bar', 'bar', brands, conteo, colors, 'Usuarios');
-        crearGrafica('q_doughnut', 'doughnut', brands, conteo, colors, 'Anillo');
-        crearGrafica('q_polar', 'polarArea', brands, conteo, colors, 'Impacto');
-        crearGrafica('q_radar', 'radar', brands, conteo, {bg: '#A18CD140', border: '#A18CD1'}, 'Perfil');
+        createChart('q_hist', 'bar', brands, counts, color, { isHistogram: true });
+        createChart('q_bar', 'bar', brands, counts, color);
+        createChart('q_poly', 'line', brands, counts, color, { fill: true });
+        createChart('q_ogive', 'line', brands, cumulative, color, { isOgive: true });
+        createChart('q_pie', 'pie', brands, counts, color);
     }
 
     window.onload = function() {
-        generarDiscretos();
-        generarContinuos();
-        generarCualitativos();
+        runDiscreto();
+        runContinuo();
+        runCualitativo();
     };
 </script>
 
