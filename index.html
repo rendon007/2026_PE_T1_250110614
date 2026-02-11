@@ -3,394 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Probabilidad y Estadística Dinámica</title>
+    <title>Estadística Avanzada: Visualización Múltiple</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #f0f2f5;
+            --bg-body: #f4f6f8;
+            --text-color: #2d3436;
             --card-bg: #ffffff;
-            --text-main: #333;
-            --gradient-discreto: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
-            --gradient-continuo: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --gradient-cualitativo: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --color-discreto: #FF6B6B;
+            --color-continuo: #4ECDC4;
+            --color-cualitativo: #A18CD1;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
         }
 
-        .container {
-            max-width: 1000px;
+        .main-container {
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         h1 {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 10px;
             font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: -webkit-linear-gradient(#333, #666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        p.intro {
+        .intro-text {
             text-align: center;
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 40px;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            font-size: 1.1rem;
+            color: #636e72;
+            line-height: 1.6;
         }
 
-        .card {
+        .section-card {
             background: var(--card-bg);
-            border-radius: 15px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
             overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
         }
 
         .card-header {
-            padding: 20px;
+            padding: 25px 30px;
             color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .header-discreto { background: var(--gradient-discreto); }
-        .header-continuo { background: var(--gradient-continuo); }
-        .header-cualitativo { background: var(--gradient-cualitativo); }
-
-        .card-body {
-            padding: 25px;
-        }
-
-        .definition {
-            background-color: #f9f9f9;
-            border-left: 5px solid #ccc;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 0 5px 5px 0;
-        }
-
-        button {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
-        }
-        
-        .btn-discreto { background: var(--gradient-discreto); }
-        .btn-continuo { background: var(--gradient-continuo); }
-        .btn-cualitativo { background: var(--gradient-cualitativo); }
-
-        .raw-data-box {
-            background: #2d3436;
-            color: #00cec9;
-            font-family: 'Courier New', monospace;
-            padding: 10px;
-            height: 60px;
-            overflow-y: scroll;
-            border-radius: 5px;
-            margin: 15px 0;
-            font-size: 0.85rem;
-        }
-
-        .visual-area {
-            display: flex;
             flex-wrap: wrap;
+        }
+
+        .header-discreto { background: linear-gradient(135deg, #FF6B6B, #EE5253); }
+        .header-continuo { background: linear-gradient(135deg, #4ECDC4, #556270); }
+        .header-cualitativo { background: linear-gradient(135deg, #A18CD1, #FBC2EB); }
+
+        .card-header h2 { margin: 0; font-size: 1.8rem; }
+
+        .info-panel {
+            padding: 20px 30px;
+            background-color: #fcfcfc;
+            border-bottom: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-top: 20px;
         }
 
-        .table-container {
-            flex: 1;
-            min-width: 300px;
-        }
+        .info-box h3 { margin-top: 0; color: #444; }
+        .info-box p { font-size: 0.95rem; line-height: 1.5; color: #555; }
+        .highlight { font-weight: bold; color: #333; }
 
-        .chart-container {
-            flex: 1;
-            min-width: 300px;
-            height: 300px;
-            position: relative;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
+        .controls {
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
             border-bottom: 1px solid #eee;
         }
 
-        th {
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
             color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
         
-        .card.discreto th { background: #FF5E62; }
-        .card.continuo th { background: #11998e; }
-        .card.cualitativo th { background: #667eea; }
+        .btn-discreto { background: #FF6B6B; }
+        .btn-continuo { background: #4ECDC4; }
+        .btn-cualitativo { background: #A18CD1; }
 
-        tr:hover { background-color: #f1f1f1; }
+        .grid-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
 
+        .chart-wrapper {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            height: 300px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .chart-title {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .data-preview {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #666;
+            background: #eee;
+            padding: 10px;
+            margin: 0 30px;
+            border-radius: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 768px) {
+            .info-panel { grid-template-columns: 1fr; }
+            .card-header { flex-direction: column; gap: 10px; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="main-container">
+    <h1>Análisis Estadístico Multidimensional</h1>
+    <p class="intro-text">
+        Esta herramienta genera simulaciones en tiempo real para visualizar cómo se comportan los diferentes tipos de datos estadísticos. 
+        Se presentan 5 perspectivas gráficas diferentes para cada conjunto de datos.
+    </p>
 
-    <h1>📊 Análisis de Datos</h1>
-    <p class="intro">Ejemplos interactivos de tipos de variables estadísticas</p>
-
-    <div class="card discreto">
+    <div class="section-card">
         <div class="card-header header-discreto">
-            1. Cuantitativos Discretos
-            <button class="btn-discreto" onclick="generarDiscretos()">🎲 Lanzar Dados</button>
+            <h2>1. Datos Discretos (Dados)</h2>
+            <button class="btn-discreto" onclick="generarDiscretos()">Generar Nuevos Datos</button>
         </div>
-        <div class="card-body">
-            <div class="definition" style="border-color: #FF5E62;">
-                <strong>Ejemplo:</strong> Lanzamiento de un dado 100 veces.<br>
-                <em>Característica:</em> Valores enteros exactos (1, 2, 3...). No existe la cara 3.5.
+        <div class="info-panel">
+            <div class="info-box">
+                <h3>🔍 Concepto Clave</h3>
+                <p>Los datos discretos provienen de un proceso de <span class="highlight">conteo</span>. Solo pueden tomar valores enteros aislados. Entre el valor 1 y el 2 no hay nada (no puedes sacar 1.5 en un dado estándar).</p>
             </div>
-            
-            <div id="output-discreto" class="raw-data-box">Esperando datos...</div>
-
-            <div class="visual-area">
-                <div class="table-container">
-                    <table>
-                        <thead><tr><th>Cara</th><th>Frecuencia</th></tr></thead>
-                        <tbody id="tabla-discreto"></tbody>
-                    </table>
-                </div>
-                <div class="chart-container">
-                    <canvas id="graficaDiscreto"></canvas>
-                </div>
+            <div class="info-box">
+                <h3>📊 Interpretación</h3>
+                <p>Al lanzar un dado 100 veces, esperamos una "Distribución Uniforme" teórica (todas las caras con igual probabilidad). Sin embargo, el azar crea variaciones naturales que veremos en las gráficas.</p>
             </div>
+        </div>
+        <div class="controls">
+            <div id="text-discreto" class="data-preview">Datos: Esperando generación...</div>
+        </div>
+        <div class="grid-charts">
+            <div class="chart-wrapper"><div class="chart-title">Frecuencia Absoluta (Barras)</div><canvas id="d_bar"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Proporción (Pastel)</div><canvas id="d_pie"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Tendencia (Línea)</div><canvas id="d_line"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Simetría (Radar)</div><canvas id="d_radar"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Volumen (Polar Area)</div><canvas id="d_polar"></canvas></div>
         </div>
     </div>
 
-    <div class="card continuo">
+    <div class="section-card">
         <div class="card-header header-continuo">
-            2. Cuantitativos Continuos
-            <button class="btn-continuo" onclick="generarContinuos()">📏 Medir Estaturas</button>
+            <h2>2. Datos Continuos (Estaturas)</h2>
+            <button class="btn-continuo" onclick="generarContinuos()">Generar Nuevos Datos</button>
         </div>
-        <div class="card-body">
-            <div class="definition" style="border-color: #11998e;">
-                <strong>Ejemplo:</strong> Estatura de estudiantes (1.50m - 1.95m).<br>
-                <em>Característica:</em> Valores decimales infinitos dentro de un rango. Usamos histogramas.
+        <div class="info-panel">
+            <div class="info-box">
+                <h3>🔍 Concepto Clave</h3>
+                <p>Los datos continuos provienen de una <span class="highlight">medición</span>. Pueden tomar infinitos valores dentro de un rango (ej. 1.754m). Para graficarlos, es obligatorio agruparlos en intervalos o "bins".</p>
             </div>
-
-            <div id="output-continuo" class="raw-data-box">Esperando datos...</div>
-
-            <div class="visual-area">
-                <div class="table-container">
-                    <table>
-                        <thead><tr><th>Rango de Altura</th><th>Cantidad</th></tr></thead>
-                        <tbody id="tabla-continuo"></tbody>
-                    </table>
-                </div>
-                <div class="chart-container">
-                    <canvas id="graficaContinuo"></canvas>
-                </div>
+            <div class="info-box">
+                <h3>📊 Interpretación</h3>
+                <p>Las estaturas suelen seguir una "Distribución Normal" (Campana de Gauss), donde la mayoría de la gente está en el promedio y hay pocos muy bajos o muy altos. Observa la forma de campana en el Polígono.</p>
             </div>
+        </div>
+        <div class="controls">
+            <div id="text-continuo" class="data-preview">Datos: Esperando generación...</div>
+        </div>
+        <div class="grid-charts">
+            <div class="chart-wrapper"><div class="chart-title">Histograma (Barras)</div><canvas id="c_bar"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Polígono de Frecuencias (Línea)</div><canvas id="c_line"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Distribución Porcentual (Dona)</div><canvas id="c_doughnut"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Dispersión de Rangos (Radar)</div><canvas id="c_radar"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Ranking Horizontal (Barras H)</div><canvas id="c_hbar"></canvas></div>
         </div>
     </div>
 
-    <div class="card cualitativo">
+    <div class="section-card">
         <div class="card-header header-cualitativo">
-            3. Cualitativos (Categóricos)
-            <button class="btn-cualitativo" onclick="generarCualitativos()">📱 Encuesta Móvil</button>
+            <h2>3. Datos Cualitativos (Marcas)</h2>
+            <button class="btn-cualitativo" onclick="generarCualitativos()">Generar Nuevos Datos</button>
         </div>
-        <div class="card-body">
-            <div class="definition" style="border-color: #667eea;">
-                <strong>Ejemplo:</strong> Marca de teléfono celular.<br>
-                <em>Característica:</em> No son números, son etiquetas o cualidades. Usamos gráfica de pastel.
+        <div class="info-panel">
+            <div class="info-box">
+                <h3>🔍 Concepto Clave</h3>
+                <p>Son variables <span class="highlight">categóricas</span> que describen cualidades no numéricas. En este caso son datos "nominales" porque no tienen un orden jerárquico lógico (Apple no es "mayor" que Samsung matemáticamente).</p>
             </div>
-
-            <div id="output-cualitativo" class="raw-data-box">Esperando datos...</div>
-
-            <div class="visual-area">
-                <div class="table-container">
-                    <table>
-                        <thead><tr><th>Marca</th><th>Usuarios</th></tr></thead>
-                        <tbody id="tabla-cualitativo"></tbody>
-                    </table>
-                </div>
-                <div class="chart-container">
-                    <canvas id="graficaCualitativo"></canvas>
-                </div>
+            <div class="info-box">
+                <h3>📊 Interpretación</h3>
+                <p>Se utilizan para estudios de mercado y preferencias. La gráfica de Pastel y la de Dona son las más comunes para mostrar la "Cuota de Mercado" (Market Share) de cada categoría.</p>
             </div>
+        </div>
+        <div class="controls">
+            <div id="text-cualitativo" class="data-preview">Datos: Esperando generación...</div>
+        </div>
+        <div class="grid-charts">
+            <div class="chart-wrapper"><div class="chart-title">Cuota de Mercado (Pastel)</div><canvas id="q_pie"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Comparativa (Barras)</div><canvas id="q_bar"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Anillo (Dona)</div><canvas id="q_doughnut"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Impacto Visual (Polar Area)</div><canvas id="q_polar"></canvas></div>
+            <div class="chart-wrapper"><div class="chart-title">Perfil (Radar)</div><canvas id="q_radar"></canvas></div>
         </div>
     </div>
-
 </div>
 
 <script>
-    let chartDiscreto = null;
-    let chartContinuo = null;
-    let chartCualitativo = null;
+    const charts = {};
 
-    function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+    function crearGrafica(canvasId, tipo, labels, data, colores, labelDataset) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        if (charts[canvasId]) charts[canvasId].destroy();
+
+        const config = {
+            type: tipo,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: labelDataset,
+                    data: data,
+                    backgroundColor: colores.bg,
+                    borderColor: colores.border,
+                    borderWidth: 1,
+                    fill: tipo === 'line' || tipo === 'radar'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: tipo !== 'bar' && tipo !== 'horizontalBar' } },
+                scales: (tipo === 'bar' || tipo === 'line') ? { y: { beginAtZero: true } } : {}
+            }
+        };
+
+        if(tipo === 'horizontalBar') config.type = 'bar';
+        if(tipo === 'horizontalBar') config.options.indexAxis = 'y';
+
+        charts[canvasId] = new Chart(ctx, config);
     }
 
     function generarDiscretos() {
-        let datos = [];
-        let conteo = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
-
-        for(let i=0; i<100; i++) {
-            let cara = randomInt(1, 6);
-            datos.push(cara);
-            conteo[cara]++;
+        let conteo = [0, 0, 0, 0, 0, 0];
+        let raw = [];
+        for(let i=0; i<100; i++){
+            let val = Math.floor(Math.random() * 6) + 1;
+            raw.push(val);
+            conteo[val-1]++;
         }
+        document.getElementById('text-discreto').innerText = "Muestra (últimos 20): " + raw.slice(-20).join(", ") + "...";
 
-        document.getElementById("output-discreto").innerText = datos.join(", ");
+        const labels = ['Cara 1', 'Cara 2', 'Cara 3', 'Cara 4', 'Cara 5', 'Cara 6'];
+        const colors = {
+            bg: ['#FF6B6B80', '#FF8E5380', '#FFA50280', '#2ED57380', '#1E90FF80', '#3742FA80'],
+            border: ['#FF6B6B', '#FF8E53', '#FFA502', '#2ED573', '#1E90FF', '#3742FA']
+        };
 
-        let tablaHTML = "";
-        let valoresY = [];
-        for(let i=1; i<=6; i++) {
-            tablaHTML += `<tr><td>Cara ${i}</td><td>${conteo[i]}</td></tr>`;
-            valoresY.push(conteo[i]);
-        }
-        document.getElementById("tabla-discreto").innerHTML = tablaHTML;
-
-        const ctx = document.getElementById('graficaDiscreto').getContext('2d');
-        if(chartDiscreto) chartDiscreto.destroy();
-
-        chartDiscreto = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['1', '2', '3', '4', '5', '6'],
-                datasets: [{
-                    label: 'Frecuencia',
-                    data: valoresY,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)',
-                        'rgba(255, 159, 64, 0.7)'
-                    ],
-                    borderColor: 'rgba(0,0,0,0.5)',
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        crearGrafica('d_bar', 'bar', labels, conteo, colors, 'Frecuencia');
+        crearGrafica('d_pie', 'pie', labels, conteo, colors, 'Proporción');
+        crearGrafica('d_line', 'line', labels, conteo, {bg: '#FF6B6B20', border: '#FF6B6B'}, 'Tendencia');
+        crearGrafica('d_radar', 'radar', labels, conteo, {bg: '#FF8E5340', border: '#FF8E53'}, 'Simetría');
+        crearGrafica('d_polar', 'polarArea', labels, conteo, colors, 'Volumen');
     }
 
     function generarContinuos() {
-        let datos = [];
-        let conteo = [0, 0, 0, 0, 0]; 
-        let etiquetas = ["< 1.60m", "1.60 - 1.70m", "1.70 - 1.80m", "1.80 - 1.90m", "> 1.90m"];
-
-        for(let i=0; i<100; i++) {
+        let conteo = [0, 0, 0, 0, 0];
+        let raw = [];
+        for(let i=0; i<100; i++){
             let h = (Math.random() * (1.95 - 1.50) + 1.50);
-            datos.push(h.toFixed(2) + "m");
-            
+            raw.push(h.toFixed(2));
             if(h < 1.60) conteo[0]++;
             else if(h < 1.70) conteo[1]++;
             else if(h < 1.80) conteo[2]++;
             else if(h < 1.90) conteo[3]++;
             else conteo[4]++;
         }
+        document.getElementById('text-continuo').innerText = "Muestra (últimos 20): " + raw.slice(-20).join("m, ") + "m...";
 
-        document.getElementById("output-continuo").innerText = datos.join(" | ");
+        const labels = ['<1.60', '1.60-1.70', '1.70-1.80', '1.80-1.90', '>1.90'];
+        const colors = {
+            bg: ['#4ECDC480', '#C7F46480', '#FF6B6B80', '#C4456980', '#55627080'],
+            border: ['#4ECDC4', '#C7F464', '#FF6B6B', '#C44569', '#556270']
+        };
 
-        let tablaHTML = "";
-        for(let i=0; i<5; i++){
-            tablaHTML += `<tr><td>${etiquetas[i]}</td><td>${conteo[i]}</td></tr>`;
-        }
-        document.getElementById("tabla-continuo").innerHTML = tablaHTML;
-
-        const ctx = document.getElementById('graficaContinuo').getContext('2d');
-        if(chartContinuo) chartContinuo.destroy();
-
-        chartContinuo = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: etiquetas,
-                datasets: [{
-                    label: 'Estudiantes',
-                    data: conteo,
-                    fill: true,
-                    backgroundColor: 'rgba(56, 239, 125, 0.2)',
-                    borderColor: '#11998e',
-                    tension: 0.3,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#11998e',
-                    pointRadius: 6
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        crearGrafica('c_bar', 'bar', labels, conteo, {bg: '#4ECDC480', border: '#4ECDC4'}, 'Estudiantes');
+        crearGrafica('c_line', 'line', labels, conteo, {bg: '#55627020', border: '#556270'}, 'Polígono');
+        crearGrafica('c_doughnut', 'doughnut', labels, conteo, colors, 'Distribución');
+        crearGrafica('c_radar', 'radar', labels, conteo, {bg: '#C7F46440', border: '#C7F464'}, 'Dispersión');
+        crearGrafica('c_hbar', 'horizontalBar', labels, conteo, {bg: '#FF6B6B80', border: '#FF6B6B'}, 'Ranking');
     }
 
     function generarCualitativos() {
-        const opciones = ["Samsung", "Apple", "Xiaomi", "Motorola"];
-        let datos = [];
-        let conteo = { "Samsung": 0, "Apple": 0, "Xiaomi": 0, "Motorola": 0 };
-
-        for(let i=0; i<100; i++) {
-            let marca = opciones[randomInt(0, 3)];
-            datos.push(marca);
-            conteo[marca]++;
+        const brands = ["Samsung", "Apple", "Xiaomi", "Motorola"];
+        let conteo = [0, 0, 0, 0];
+        let raw = [];
+        for(let i=0; i<100; i++){
+            let idx = Math.floor(Math.random() * 4);
+            raw.push(brands[idx]);
+            conteo[idx]++;
         }
+        document.getElementById('text-cualitativo').innerText = "Muestra (últimos 20): " + raw.slice(-20).join(", ") + "...";
 
-        document.getElementById("output-cualitativo").innerText = datos.join(", ");
+        const colors = {
+            bg: ['#3498db80', '#95a5a680', '#e67e2280', '#2ecc7180'],
+            border: ['#3498db', '#95a5a6', '#e67e22', '#2ecc71']
+        };
 
-        let tablaHTML = "";
-        let dataPie = [];
-        opciones.forEach(marca => {
-            tablaHTML += `<tr><td>${marca}</td><td>${conteo[marca]}</td></tr>`;
-            dataPie.push(conteo[marca]);
-        });
-        document.getElementById("tabla-cualitativo").innerHTML = tablaHTML;
-
-        const ctx = document.getElementById('graficaCualitativo').getContext('2d');
-        if(chartCualitativo) chartCualitativo.destroy();
-
-        chartCualitativo = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: opciones,
-                datasets: [{
-                    data: dataPie,
-                    backgroundColor: [
-                        '#3498db',
-                        '#95a5a6',
-                        '#e67e22',
-                        '#2ecc71'
-                    ],
-                    hoverOffset: 10
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        crearGrafica('q_pie', 'pie', brands, conteo, colors, 'Market Share');
+        crearGrafica('q_bar', 'bar', brands, conteo, colors, 'Usuarios');
+        crearGrafica('q_doughnut', 'doughnut', brands, conteo, colors, 'Anillo');
+        crearGrafica('q_polar', 'polarArea', brands, conteo, colors, 'Impacto');
+        crearGrafica('q_radar', 'radar', brands, conteo, {bg: '#A18CD140', border: '#A18CD1'}, 'Perfil');
     }
 
     window.onload = function() {
