@@ -1,1 +1,114 @@
-Hola mundo
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Estadístico | ITSOEH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Análisis Estadístico Descriptivo</h1>
+    <p>Reporte Técnico de Frecuencias y Representación Gráfica</p>
+</header>
+
+<div class="container">
+    
+    <div class="section s-discreto">
+        <h2>1. Datos Cuantitativos Discretos</h2>
+        <div class="context-box">
+            <strong>Contexto del Estudio:</strong> Auditoría de control de calidad en una fábrica de juegos de mesa. Se registraron los lanzamientos de un dado (n=100) para analizar su distribución empírica.
+        </div>
+        <div class="data-raw">
+            Datos registrados (n=100): 2, 4, 1, 6, 3, 5, 2, 1, 6, 2, 4, 5, 3, 1, 6, 2, 5, 4, 3, 1, 2, 6, 5, 4, 1, 3, 2, 6, 5, 1, 4, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6, 5, 4, 1, 2, 3, 6
+        </div>
+        
+        <h3>Tabla de Distribución de Frecuencias</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clase (xᵢ)</th>
+                        <th>Frec. Absoluta (fᵢ)</th>
+                        <th>Frec. Relativa (hᵢ)</th>
+                        <th>Frec. Acumulada (Fᵢ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>17</td><td>0.17</td><td>17</td></tr>
+                    <tr><td>2</td><td>18</td><td>0.18</td><td>35</td></tr>
+                    <tr><td>3</td><td>16</td><td>0.16</td><td>51</td></tr>
+                    <tr><td>4</td><td>15</td><td>0.15</td><td>66</td></tr>
+                    <tr><td>5</td><td>17</td><td>0.17</td><td>83</td></tr>
+                    <tr><td>6</td><td>17</td><td>0.17</td><td>100</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row"><td>TOTAL</td><td>100</td><td>1.00</td><td>-</td></tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <h3>Representación Gráfica</h3>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <img src="imagenes/Discreto_Barras.png" alt="Diagrama de Barras">
+                <div class="chart-title">Figura 1.1: Diagrama de Barras (fᵢ)</div>
+            </div>
+            <div class="chart-card">
+                <img src="imagenes/Discreto_Histograma.png" alt="Histograma">
+                <div class="chart-title">Figura 1.2: Histograma (hᵢ)</div>
+            </div>
+            <div class="chart-card">
+                <img src="imagenes/Discreto_Poligono.png" alt="Polígono de Frecuencias">
+                <div class="chart-title">Figura 1.3: Polígono de Frecuencias (hᵢ)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section s-continuo">
+        <h2>2. Datos Cuantitativos Continuos</h2>
+        <div class="context-box">
+            <strong>Contexto del Estudio:</strong> Análisis antropométrico institucional. Estatura (metros) de 100 estudiantes para diseño ergonómico de mobiliario.
+        </div>
+        <div class="data-raw">
+            Datos registrados (n=100): 1.55, 1.62, 1.78, 1.50, 1.66, 1.85, 1.72, 1.60, 1.68, 1.75, 1.92... [Truncado para brevedad]
+        </div>
+
+        <h3>Tabla de Distribución de Frecuencias</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clase</th>
+                        <th>Límite Inf.</th>
+                        <th>Límite Sup.</th>
+                        <th>Marca (xᵢ)</th>
+                        <th>fᵢ</th>
+                        <th>hᵢ</th>
+                        <th>Fᵢ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>1.50</td><td>1.59</td><td>1.55</td><td>20</td><td>0.20</td><td>20</td></tr>
+                    <tr><td>2</td><td>1.60</td><td>1.69</td><td>1.65</td><td>30</td><td>0.30</td><td>50</td></tr>
+                    <tr><td>3</td><td>1.70</td><td>1.79</td><td>1.75</td><td>25</td><td>0.25</td><td>75</td></tr>
+                    <tr><td>4</td><td>1.80</td><td>1.89</td><td>1.85</td><td>15</td><td>0.15</td><td>90</td></tr>
+                    <tr><td>5</td><td>1.90</td><td>2.00</td><td>1.95</td><td>10</td><td>0.10</td><td>100</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row"><td colspan="4">TOTAL</td><td>100</td><td>1.00</td><td>-</td></tr>
+                </tfoot>
+            </table>
+        </div>
+        </div>
+
+</div>
+
+<footer>
+    <p>&copy; 2026 Proyecto de Probabilidad y Estadística | ITSOEH</p>
+</footer>
+
+</body>
+</html>
